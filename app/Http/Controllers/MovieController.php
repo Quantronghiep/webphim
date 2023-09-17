@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateMovieRequest;
 use Illuminate\Http\Request;
 use App\Models\Movie;
 use App\Models\Category;
 use App\Models\Genre;
 use App\Models\Country;
 use App\Models\Episode;
+use App\Models\Rating;
 use App\Models\Movie_Genre;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -28,6 +30,9 @@ class MovieController extends Controller
         $movie = Movie::where('topview',0)->orderBy('updated_at','DESC')->take(20)->get();
         $output = '';
         foreach($movie as $mov){
+              //rating
+              $rating = Rating::where('movie_id',$mov->id)->avg('rating');
+              $rating = round($rating);
             if($mov->resolution == 0)
                 $text = 'HD';
             elseif($mov->resolution == 1)
@@ -47,7 +52,7 @@ class MovieController extends Controller
                 <div class="viewsCount" style="color: #9d9d9d;">'.$mov->count_views.' lượt quan tâm</div>
                 <ul class="list-inline rating" style="margin-left:0"  title="Average Rating">';
 
-                        for($count=1; $count<=5; $count++){
+                        for($count=1; $count<=$rating; $count++){
                             $output.= '<li title="star_rating" 
                             style="cursor:pointer; color:#ffcc00;padding:0;
                             font-size:16px;">&#9733;</li>';
@@ -69,6 +74,10 @@ class MovieController extends Controller
         $movie = Movie::where('topview',$params['value'])->orderBy('updated_at','DESC')->take(20)->get();
         $output = '';
         foreach($movie as $mov){
+            //rating
+            $rating = Rating::where('movie_id',$mov->id)->avg('rating');
+            $rating = round($rating);
+         
             if($mov->resolution == 0)
                 $text = 'HD';
             elseif($mov->resolution == 1)
@@ -88,7 +97,7 @@ class MovieController extends Controller
                 <div class="viewsCount" style="color: #9d9d9d;">'.$mov->count_views.' lượt quan tâm</div>
                 <ul class="list-inline rating" style="margin-left:0"  title="Average Rating">';
 
-                        for($count=1; $count<=5; $count++){
+                        for($count=1; $count<=$rating; $count++){
                             $output.= '<li title="star_rating" 
                             style="cursor:pointer; color:#ffcc00;padding:0;
                             font-size:16px;">&#9733;</li>';
@@ -165,7 +174,7 @@ class MovieController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(CreateMovieRequest $request)
     {
         $params = $request->all();
         $params['image'] = $request->file('image');
@@ -205,6 +214,7 @@ class MovieController extends Controller
         $params = $request->all();
         $movie = new Movie();
         $params['image'] = $request->file('image');
+        // dd($request->file('image'));
         $movie->updateMovie($params,$id);
         return redirect('admin/movie')->with('success','Update success!');
     }

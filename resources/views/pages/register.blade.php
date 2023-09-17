@@ -15,11 +15,17 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('admin/dist/css/adminlte.min.css')}}">
 </head>
+<style>
+  .login-page {
+    background-image: url("https://img6.thuthuatphanmem.vn/uploads/2022/03/16/mau-background-phim-dep_110943283.jpg");
+    /* Các thuộc tính khác cho hình nền */
+    background-size: cover; /* Kích thước ảnh bằng với kích thước của phần tử */
+    background-position: center; /* Canh giữa ảnh */
+}
+</style>
 <body class="hold-transition login-page">
 <div class="login-box">
-  <div class="login-logo">
-    <a href="{{asset('admin/index2.html')}}"><b>Register User</a>
-  </div>
+
   @if ($errors->any())
   <ul>
       @foreach ($errors->all() as $error)
@@ -38,7 +44,7 @@
           <input type="text" class="form-control" placeholder="Name" name="name" value="{{old('name')}}">
           <div class="input-group-append">
             <div class="input-group-text">
-              <span class="fas fa-lock"></span>
+              <span class="fas fa-user"></span>
             </div>
           </div>
         </div>
@@ -107,6 +113,6 @@
 <!-- Bootstrap 4 -->
 <script src="{{asset('admin/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- AdminLTE App -->
-<script src="{{asset('admin/dist/js/adminlte.min.js')}}></s   cript>
+<script src="{{asset('admin/dist/js/adminlte.min.js')}}"></script>
 </body>
 </html>

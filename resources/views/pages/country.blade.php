@@ -26,6 +26,10 @@
 
             <article class="col-md-3 col-sm-3 col-xs-6 thumb grid-item post-37606">
                <div class="halim-item">
+                  <input type="hidden" value="{{$mov->title}}" id="wishlist_movietitle{{$mov->id}}">
+               <input type="hidden" value="{{$mov->slug}}" id="wishlist_movieslug{{$mov->id}}">
+               <input type="hidden" value="{{$mov->image}}" id="wishlist_movieurlImage{{$mov->id}}">
+                  <button class="button_wishlist" id="{{$mov->id}}" onclick="add_wishlist(this.id);"><i class="fa fa-heart"></i></button>
                   <a class="halim-thumb" href="{{route('movie',$mov->slug)}}">
                      <figure><img class="lazy img-responsive" src="{{asset('uploads/movies/' . $mov->image)}}" alt="{{$mov->title}}" title="{{$mov->title}}"></figure>
                      <span class="status">@if($mov->resolution == 0)
@@ -36,17 +40,21 @@
                        FullHD
                        @else
                        Trailer
-                       @endif</span><span class="episode"><i class="fa fa-play" aria-hidden="true"></i>
+                       @endif</span>
+                       <span class="episode"><i class="fa fa-play" aria-hidden="true"></i>
+                        @if($mov->thuocphim==1)
+                           <span>{{$mov->episode_count}}/{{$mov->sotap}}</span>
+                        @endif
                         @if($mov->phude == 1)
                         Thuyết Minh
-                        @if($mov->season !=0)
+                        {{-- @if($mov->season !=0)
                            - Season . {{$mov->season}}
-                        @endif
+                        @endif --}}
                      @else
                         Vietsub
-                        @if($mov->season !=0)
+                        {{-- @if($mov->season !=0)
                         - Season {{$mov->season}}
-                        @endif
+                        @endif --}}
                      @endif
                      </span> 
                      <div class="icon_overlay"></div>
@@ -70,7 +78,7 @@
                <li><a class="page-numbers" href="">3</a></li>
                <li><span class="page-numbers dots">&hellip;</span></li>
                <li><a class="page-numbers" href="">55</a></li>
-               <li><a class="next page-numbers" href=""><i class="hl-down-open rotate-right"></i></a></li>
+               <li><a class="next page-numbers" href=""><i class="hl-down-open rotate-left"></i></a></li>
             </ul> --}}
             {!! $movie->links("pagination::bootstrap-4") !!}
          </div>

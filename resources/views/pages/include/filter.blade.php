@@ -12,10 +12,10 @@
              <div class="form-group">
                 <select class="form-control style-filter" name="order" id="exampleFormControlSelect1">
                    <option value="">Sắp xếp</option>
-                   <option value="date">Ngày đăng</option>
-                   <option value="year_release">Năm sản xuất</option>
-                   <option value="name_a_z">Tên phim</option>
-                   <option value="watch_view">Lượt xem</option>
+                   <option {{isset($_GET['order']) && $_GET['order'] == "date" ? 'selected' : ''}}  value="date">Ngày đăng</option>
+                   <option {{isset($_GET['order']) && $_GET['order'] == "year_release" ? 'selected' : ''}} value="year_release">Năm sản xuất</option>
+                   <option {{isset($_GET['order']) && $_GET['order'] == "name_a_z" ? 'selected' : ''}} value="name_a_z">Tên phim</option>
+                   <option {{isset($_GET['order']) && $_GET['order'] == "watch_view" ? 'selected' : ''}} value="watch_view">Lượt xem</option>
                 </select>
              </div>
            </div>

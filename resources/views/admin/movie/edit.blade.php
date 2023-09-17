@@ -18,6 +18,7 @@
                     {!! Form::open(['route'=>['movie.update',$movie->id],'method'=>'PUT','enctype'=>'multipart/form-data']) !!}
                         <div class="form-group">
                             {!! Form::label('title', 'Title', []) !!}
+                            <span class="text-danger"> *</span>
                             {!! Form::text('title', $movie->title, ['class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...','id'=>'slug','onkeyup'=>'ChangeToSlug()']) !!}
                         </div>
                         <div class="form-group">
@@ -26,6 +27,7 @@
                         </div>
                         <div class="form-group">
                             {!! Form::label('name_eng', 'Name English', []) !!}
+                            <span class="text-danger"> *</span>
                             {!! Form::text('name_eng', $movie->name_eng, ['class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...']) !!}
                         </div>
                         <div class="form-group">
@@ -66,6 +68,7 @@
                         </div>
                         <div class="form-group">
                             {!! Form::label('Genre', 'Genre', []) !!}
+                            <span class="text-danger"> *</span>
                             <br>
                             @foreach($list_genre as $genre)
                                 {!! Form::checkbox('genre[]',$genre->id,isset($movie_genre) && $movie_genre->contains($genre->id) ? true : false) !!}
@@ -97,7 +100,12 @@
                             {!! Form::selectRange('season',1,20  ,$movie->season,['class'=>'select-year']) !!}
                         </div>
                         <div class="form-group">
+                            {!! Form::label('price', 'Price', []) !!}
+                            {!! Form::text('price', $movie->price, ['class'=>'form-control']) !!}
+                        </div>
+                        <div class="form-group">
                             {!! Form::label('image', 'Image', []) !!}
+                            <span class="text-danger"> *</span>
                             {!! Form::file('image', ['class'=>'form-control-file']) !!}
                             @if(!empty($movie->image))
                             <img height="80" src="{{ asset('uploads/movies/' . $movie->image) }}"/>

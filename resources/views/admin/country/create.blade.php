@@ -14,10 +14,18 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    @if ($errors->any())
+                    <ul  style="padding: 0px">
+                        @foreach ($errors->all() as $error)
+                            <li class="alert alert-danger">{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    @endif
 
                     {!! Form::open(['route'=>'country.store','method'=>'POST']) !!}
                     <div class="form-group">
                         {!! Form::label('title', 'Title', []) !!}
+                        <span class="text-danger"> *</span>
                         {!! Form::text('title', null, ['class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...','id'=>'slug','onkeyup'=>'ChangeToSlug()']) !!}
                     </div>
                     <div class="form-group">

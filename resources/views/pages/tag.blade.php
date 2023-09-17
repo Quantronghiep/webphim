@@ -70,7 +70,7 @@
                 <li><a class="page-numbers" href="">3</a></li>
                 <li><span class="page-numbers dots">&hellip;</span></li>
                 <li><a class="page-numbers" href="">55</a></li>
-                <li><a class="next page-numbers" href=""><i class="hl-down-open rotate-right"></i></a></li>
+                <li><a class="next page-numbers" href=""><i class="hl-down-open rotate-left"></i></a></li>
              </ul> --}}
              {!! $movie->links("pagination::bootstrap-4") !!}
           </div>

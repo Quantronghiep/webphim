@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\EpisodeController;
@@ -8,7 +9,10 @@ use App\Http\Controllers\IndexController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\LoginUserController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\UserController;
 use App\Models\Episode;
+use Faker\Provider\ar_EG\Payment;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,17 +45,30 @@ Route::get('/tim-kiem-phim',[IndexController::class,'timKiemPhim'])->name('timKi
 Route::get('/locphim',[IndexController::class,'locphim'])->name('locphim');
 Route::post('/add-rating',[IndexController::class,'addRating'])->name('addRating');
 
+Route::get('/add-to-cart/{id}',[CartController::class,'addToCart'])->name('addToCart');
+Route::get('/show-cart',[CartController::class,'showCart'])->name('showCart');
+Route::get('/delete-cart',[CartController::class,'deleteCart'])->name('deleteCart');
+
+//History cart
+Route::get('/history-buy-movie',[CartController::class,'historyBuyMovie'])->name('historyBuyMovie');
+
+
 // Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/admin/login',[LoginController::class,'login'])->name('admin.login');
-Route::post('/check_login', [LoginController::class, 'checkLogin'])->name('check_login');
-Route::get('/logout', [LoginUserController::class, 'logout'])->name('admin.logout');
+// Route::get('/admin/login',[LoginController::class,'login'])->name('admin.login');
+// Route::post('/check_login', [LoginController::class, 'checkLogin'])->name('check_login');
+// Route::get('/logout', [LoginUserController::class, 'logout'])->name('admin.logout');
 
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware('checkRoleAdmin')->group(function () {
     Route::get('/index', [HomeController::class, 'index'])->name('admin.home');
+    Route::get('/statistic', [HomeController::class, 'thongke'])->name('admin.thongke');
+    Route::post('/filter-default', [HomeController::class, 'chartDefault'])->name('admin.chartDefault');
+    Route::post('/filter-by-date', [HomeController::class, 'filterByDate'])->name('admin.filterByDate');
+    Route::post('/filter-dashboard', [HomeController::class, 'dashboardFilter'])->name('admin.dashboardFilter');
     Route::post('/resorting',[CategoryController::class,'resorting'])->name('admin.resorting');
+    Route::resource('/user', UserController::class);
     Route::resource('/category', CategoryController::class);
     Route::resource('/genre', GenreController::class);
     Route::resource('/country', CountryController::class);
@@ -63,8 +80,18 @@ Route::prefix('admin')->group(function () {
     Route::post('/update-year-phim',[MovieController::class,'updateYearPhim'])->name('admin.updateYearPhim');
     Route::post('/update-topview-phim',[MovieController::class,'updateTopView'])->name('admin.updateTopView');
     Route::post('/update-season-phim',[MovieController::class,'updateSeasonPhim'])->name('admin.updateSeasonPhim');
-    Route::post('/filter-topview-phim',[MovieController::class,'filterTopViewPhim'])->name('admin.filterTopViewPhim');
-    Route::get('/filter-topview-phim-default',[MovieController::class,'filterTopViewPhimDefault'])->name('admin.filterTopViewPhimDefault');
     Route::post('/watch-video',[MovieController::class,'watchVideo'])->name('admin.watch-video');
 });
+
+Route::post('/filter-topview-phim',[MovieController::class,'filterTopViewPhim'])->name('admin.filterTopViewPhim');
+Route::get('/filter-topview-phim-default',[MovieController::class,'filterTopViewPhimDefault'])->name('admin.filterTopViewPhimDefault');
+
+// payment 
+Route::post('/vnpay_payment',[PaymentController::class,'vnpayPayment'])->middleware('auth')->name('vnpayPayment');
+Route::post('/thanh_toan_thang',[PaymentController::class,'vnpayPaymentMonth'])->middleware('auth')->name('vnpayPaymentMonth');
+//history payment month
+Route::get('/history-register-movie-month',[CartController::class,'historyRegisterMovieMonth'])->name('historyRegisterMovieMonth');
+// Route::get('/show-history-register-movie-month',[CartController::class,'showRegisterMovieMonth'])->name('showRegisterMovieMonth');
+
+
 

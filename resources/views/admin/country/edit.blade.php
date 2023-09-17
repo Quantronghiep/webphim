@@ -14,10 +14,24 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    @if ($errors->any())
+                    <ul style="padding:0px">
+                        @foreach ($errors->all() as $error)
+                            <li class="alert alert-danger">{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    @endif
+                    @if (Session::has('error'))
+                    <li class="alert alert-danger">{{ Session::get('error') }}</li>
+                    @endif
+                    @if(session('error'))
+                    <li class="alert alert-danger">{{session('error')}}</li>
+                    @endif
                     @if(isset($country))
                     {!! Form::open(['route'=>['country.update',$country->id],'method'=>'PUT']) !!}
                     <div class="form-group">
                         {!! Form::label('title', 'Title', []) !!}
+                        <span class="text-danger"> *</span>
                         {!! Form::text('title', $country->title, ['class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...','id'=>'slug','onkeyup'=>'ChangeToSlug()']) !!}
                     </div>
                     <div class="form-group">

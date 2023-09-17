@@ -101,7 +101,7 @@
                            <ul class="halim-list-eps">
                               @foreach($movie->episode as $key => $sotap)
                               <a href="{{route('watch',[$movie->slug,'episode'=>$sotap->episode])}}">
-                                 <li class="halim-episode"><span class="halim-btn halim-btn-2 {{$sotap->episode == $episode_url ? 'active':''}} halim-info-1-1 box-shadow" data-post-id="37976" data-server="1" data-episode="1" data-position="first" data-embed="0" data-title="Xem phim {{$movie->title}} - Tập {{$sotap->episode}} - {{$movie->name_eng}} - Vietsub + Thuyết Minh" data-h1="{{$movie->title}} - tập {{$sotap->episode}}">{{$sotap->episode}}</span>
+                                 <li class="halim-episode"><span class="halim-btn halim-btn-2 {{$sotap->episode == $tap_phim ? 'active':''}} halim-info-1-1 box-shadow" data-post-id="37976" data-server="1" data-episode="1" data-position="first" data-embed="0" data-title="Xem phim {{$movie->title}} - Tập {{$sotap->episode}} - {{$movie->name_eng}} - Vietsub + Thuyết Minh" data-h1="{{$movie->title}} - tập {{$sotap->episode}}">{{$sotap->episode}}</span>
                                  </li>
                               </a>
                               @endforeach
@@ -164,7 +164,7 @@
        <script>
           jQuery(document).ready(function($) {				
           var owl = $('#halim_related_movies-2');
-          owl.owlCarousel({loop: true,margin: 4,autoplay: true,autoplayTimeout: 4000,autoplayHoverPause: true,nav: true,navText: ['<i class="hl-down-open rotate-left"></i>', '<i class="hl-down-open rotate-right"></i>'],responsiveClass: true,responsive: {0: {items:2},480: {items:3}, 600: {items:4},1000: {items: 4}}})});
+          owl.owlCarousel({loop: true,margin: 4,autoplay: true,autoplayTimeout: 4000,autoplayHoverPause: true,nav: true,navText: ['<i class="hl-down-open rotate-left"></i>', '<i class="hl-down-open rotate-left"></i>'],responsiveClass: true,responsive: {0: {items:2},480: {items:3}, 600: {items:4},1000: {items: 4}}})});
        </script>
        </div>
        </section>
@@ -173,4 +173,40 @@
      @include('pages.include.sidebar')
          
  </div>
-@endsection
+ @stop
+ @section('scriptss')
+     <script>
+         saveMovieWatched();
+         function getMovieAndEpisodeInUrl() {
+            const url = window.location.href;
+            const parts = url.split('/');
+            const movieName = parts[parts.length - 2];
+            const episodeNumber = parseInt(parts[parts.length - 1]);
+            return { movieName, episodeNumber };
+         }
+
+         function saveMovieWatched() {
+            const { movieName, episodeNumber } = getMovieAndEpisodeInUrl();
+            
+            var newItem = {
+                'movieName' : movieName,
+                'episodeNumber' : episodeNumber,
+            }
+
+            if(localStorage.getItem('watched') == null){
+                localStorage.setItem('watched','[]');
+            }
+            var old_data = JSON.parse(localStorage.getItem('watched'));
+
+            var matches = $.grep(old_data, function(obj){
+                return (obj.movieName == movieName && obj.episodeNumber == episodeNumber);
+            })
+            // Kiểm tra nếu tập đã xem chưa được lưu trong Local Storage
+            if(!matches.length){
+               old_data.push(newItem);
+            }
+            localStorage.setItem('watched',JSON.stringify(old_data));
+         }
+
+     </script>
+ @stop

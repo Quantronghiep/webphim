@@ -16,7 +16,7 @@ class Movie extends Model
     protected $fillable = [
        'title', 'description','status','slug','image','category_id','genre_id',
        'country_id','phim_hot','name_eng','resolution','phude','year','thoiluong','tags',
-       'topview','season','trailer','sotap','thuocphim','count_views'
+       'topview','season','trailer','sotap','thuocphim','count_views','price'
    ];
 
    public function createMovie($params = []){
@@ -38,6 +38,7 @@ class Movie extends Model
         $this->trailer = $params['trailer'];
         $this->sotap = $params['sotap'];
         $this->thuocphim = $params['thuocphim'];
+        $this->price = $params['price'];
         $this->image = $params['image'];
         $this->count_views = rand(100,99999);
         foreach($params['genre'] as $genre){
@@ -79,6 +80,7 @@ class Movie extends Model
             'sotap' => $params['sotap'],
             'genre_id' => $this->genre_id,
             'thuocphim' => $params['thuocphim'],
+            'price' => $params['price'],
         ]);
 
         $this->image = $params['image'];
@@ -124,4 +126,10 @@ class Movie extends Model
     {
         return $this->hasMany(Episode::class);
     }
+
+     // 1 phim co nhieu hoa don
+     public function orders()
+     {
+         return $this->belongsToMany(Order::class,'order_details','order_id','genre_id');//ten bang,ten 2 cot
+     }
 }

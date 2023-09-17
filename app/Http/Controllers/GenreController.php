@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Genre;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\CreateCategoryRequest;
+
 
 class GenreController extends Controller
 {
@@ -21,7 +23,7 @@ class GenreController extends Controller
     }
 
     
-    public function store(Request $request)
+    public function store(CreateCategoryRequest $request)
     {
         $params = $request->all();
         $genre = new Genre();
@@ -45,7 +47,7 @@ class GenreController extends Controller
     }
 
     
-    public function update(Request $request, $id)
+    public function update(CreateCategoryRequest $request, $id)
     {
         $params = $request->all();
         $genre = new genre();

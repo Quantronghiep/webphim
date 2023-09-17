@@ -119,7 +119,7 @@
                             </td>
                             <td>{{$movie->country->title}}</td>
                             <td>{{$movie->episode_count}} / {{$movie->sotap}}</td>
-                            @if($movie->episode_count > 0)
+                            @if($movie->episode_count > 0 && $movie->sotap != $movie->episode_count)
                                 <td>
                                     <a class="btn btn-primary btn-sm" href="{{route('episode.indexEpisodeByMovieId',[$movie->id])}}">Thêm tập</a>
                                     @foreach($movie->episode as $key => $epi)
@@ -128,11 +128,24 @@
                                         </a>
                                     @endforeach
                                 </td>
-                            @else
+                            @elseif($movie->episode_count > 0 && $movie->sotap == $movie->episode_count)
+                                <td>
+                                    <a class="btn btn-primary btn-sm" href="{{route('episode.indexEpisodeByMovieId',[$movie->id])}}">Sửa tập</a>
+                                    @foreach($movie->episode as $key => $epi)
+                                        <a class="show_video" data-movie_video_id="{{$epi->movie_id}}" data-video_episode="{{$epi->episode}}" style="cursor: pointer">
+                                            <span class="badge badge-dark">{{$epi->episode}}</span>
+                                        </a>
+                                    @endforeach
+                                </td>
+                            @elseif($movie->episode_count <= 0 && $movie->resolution !=3)
                                 <td>
                                     <a href="{{route('episode.createEpisodeByMovieId',$movie->id)}}" class="btn btn-primary btn-sm">
                                         Thêm tập
                                     </a>
+                                </td>
+                            @elseif($movie->resolution ==3)
+                                <td>
+                                    <span class="badge badge-dark">Trailer</span>
                                 </td>
                             @endif
                             <td>
@@ -159,10 +172,16 @@
                             {{-- <td>{{ date('d-m-Y H:i:s', strtotime($movie->created_at))}}</td>
                             <td>{{ !empty($movie->updated_at) ? date('d-m-Y H:i:s', strtotime($movie->updated_at)) : '--' }}</td> --}}
                             <td>
-                                <a class="btn btn-info" href="{{route('movie.edit',$movie->id)}}">Sửa</a>
-                                {!! Form::open(['method'=>'DELETE','route'=>['movie.destroy',$movie->id],'onsubmit'=>'return confirm("Bạn có chắc chắn muốn xóa bản ghi này")']) !!}
-                                {!! Form::submit('Xóa', ['class'=>'btn btn-danger']) !!}
-                                {!! Form::close() !!}
+                                <a class="btn btn-info btn-sm px-3" href="{{route('movie.edit',$movie->id)}}"><i class='fa fa-pen-to-square'></i></a>
+                                <form action="{{route('movie.destroy',$movie->id)}}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm px-3 mt-2 delete-btn"  data-id="{{ $movie->id }}"><i class='fa fa-trash'></i></button>
+                                </form>
+            
+                                {{-- {!! Form::open(['method'=>'DELETE','route'=>['movie.destroy',$movie->id],'onsubmit'=>'return confirm("Bạn có chắc chắn muốn xóa bản ghi này")']) !!}
+                                {!! Form::submit('Xóa', ['class'=>'btn btn-danger btn-sm px-3']) !!}
+                                {!! Form::close() !!} --}}
                             </td>
                           </tr>
                           @endforeach
@@ -177,4 +196,34 @@
         </div>
     </div>
 </div>
-@endsection
+@stop
+@section('scripts')
+    <script>
+             document.addEventListener('DOMContentLoaded', function() {
+            var deleteButtons = document.querySelectorAll('.delete-btn');
+
+            deleteButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+
+                    var id = this.getAttribute('data-id');
+
+                    Swal.fire({
+                        title: 'Bạn có chắc chắn muốn xóa?',
+                        text: 'Hành động này sẽ không thể hoàn tác!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#dc3545',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Xóa',
+                        cancelButtonText: 'Hủy bỏ'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.closest('form').submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+@stop

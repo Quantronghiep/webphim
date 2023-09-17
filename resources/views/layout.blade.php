@@ -18,9 +18,9 @@
         type="image/x-icon" />
     <meta name="revisit-after" content="1 days" />
     <meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
-    <title>Phim hay 2021 - Xem phim hay nhất</title>
+    <title>Phim hay - Xem phim hay nhất</title>
     <meta name="description"
-        content="Phim hay 2021 - Xem phim hay nhất, xem phim online miễn phí, phim hot , phim nhanh" />
+        content="Phim hay - Xem phim hay nhất, xem phim online miễn phí, phim hot , phim nhanh" />
     <link rel="canonical" href="">
     <link rel="next" href="" />
     <meta property="og:locale" content="vi_VN" />
@@ -28,11 +28,12 @@
     <meta property="og:description"
         content="Phim hay 2020 - Xem phim hay nhất, phim hay trung quốc, hàn quốc, việt nam, mỹ, hong kong , chiếu rạp" />
     <meta property="og:url" content="" />
-    <meta property="og:site_name" content="Phim hay 2021- Xem phim hay nhất" />
+    <meta property="og:site_name" content="Phim hay- Xem phim hay nhất" />
     <meta property="og:image" content="" />
     <meta property="og:image:width" content="300" />
     <meta property="og:image:height" content="55" />
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link rel='dns-prefetch' href='//s.w.org' />
 
@@ -55,6 +56,49 @@
     </style>
     
     <style>
+        /* yeu thich  */
+      .button_wishlist {
+         border: none;
+         position: absolute;
+         top : 50%;
+         left: 44%;
+         background: white;
+         color: #6e6d7a;
+         padding: 8px;
+         border-radius: 10px;
+         z-index: 1000000;
+         font-size: 16px;
+         display: none;
+      }
+      .button_wishlist:hover{
+         background: #ccc;
+      }
+      .halim-item:hover{
+         .button_wishlist{
+            display: block;
+         }
+      }
+        .header__cart-notice {
+            position: absolute;
+            padding: 1px 4px;
+            background-color: white;
+            color: #ee4d2d;
+            font-size: 1.2rem;
+            line-height: 1.4rem;
+            border-radius: 10px;
+            border: 1px solid #ee4d2d;
+            top: -3px;
+            right: -10px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .cart {
+            display: flex;
+            cursor: pointer;
+            align-items: center;
+            margin: 0px 20px 0px -15px;
+        }
         .count_bookmark {
             margin-left: 4px;
             padding: 3px 6px;
@@ -406,33 +450,57 @@
                 <div class="col-md-4 hidden-xs flex flex-end" style="display: flex; justify-content: flex-end">
                     <div class="info">
                         <i class="fa fa-user"></i>
-                        @if (auth()->check())
-                        <span>{{ auth()->user()->name }}</span>
+                        @if (auth()->guard('web')->check())
+                        <span>{{ auth()->guard('web')->user()->name }}</span>
                         <ul class="header__navbar-user-menu">
                             <li class="header_navbar-user-item">
-                                <a href="">Tài khoản của tôi</a>
+                                <a href=""> <form action="{{route('vnpayPaymentMonth')}}" method="POST">
+                                    @csrf
+                                    <button type="submit" style="background: transparent;margin:0px;padding:0px;border:0px" name="redirect">Đăng kí gói tháng</button>
+                                </form></a>
+                               
                             </li>
                             <li class="header_navbar-user-item">
-                                <a href="{{ route('admin.logout') }}">Đăng xuất</a>
+                                <a href="{{route('historyRegisterMovieMonth')}}">Lịch sử gói tháng </a>
                             </li>
-                            {{-- <li class="header_navbar-user-item">
-                                <a href="">Đơn mua</a>
+                            <li class="header_navbar-user-item">
+                                <a href="{{route('historyBuyMovie')}}">Lịch sử giao dịch </a>
                             </li>
-                            <li class="header_navbar-user-item header_navbar-user-item--separate">
-                                <a href="">Đăng xuất</a>
-                            </li> --}}
+                            <li class="header_navbar-user-item">
+                                <a href="{{ route('logout') }}">Đăng xuất</a>
+                            </li>
                         </ul>
                         @else
                         <ul class="header__navbar-user-menu">
                             <li class="header_navbar-user-item">
+                                <a href=""> <form action="{{route('vnpayPaymentMonth')}}" method="POST">
+                                    @csrf
+                                    <button type="submit" style="background: transparent;margin:0px;padding:0px;border:0px" name="redirect">Đăng kí gói tháng</button>
+                                </form></a>
+                            </li>
+                            <li class="header_navbar-user-item">
                                 <a href="{{ route('login') }}">Đăng nhập</a>
                             </li>
                             <li class="header_navbar-user-item">
-                                <a href="{{ route('register') }}">Đăng kí</a>
+                                <a href="{{ route('register') }}">Đăng kí tài khoản</a>
                             </li>
                         </ul>
                         @endif
                     </div>
+                    {{-- @if (auth()->check()) --}}
+                    <a class="cart" href="{{route('showCart')}}" style="position: relative;">
+                        <i class="fa fa-cart-shopping"></i>
+                        @php
+                            if((session()->has('cart'))){
+                                $count_cart = count(session()->get('cart'));
+                            }
+                            else {
+                                $count_cart = 0;
+                            }
+                        @endphp
+                        <span class="header__cart-notice">{{$count_cart}}</span>
+                    </a>
+                    {{-- @endif --}}
                     <div id="" class="box-shadow book-mark"><i class="fa fa-bookmark"></i><span> Bookmarks</span><span
                             class="count_bookmark" data-value=""></span>
                             <div class="list-bookmark" id="row_wishlist">
@@ -543,10 +611,10 @@
                     <div class="footer-logo">
                         <img class="img-responsive"
                             src="https://img.favpng.com/9/23/19/movie-logo-png-favpng-nRr1DmYq3SNYSLN8571CHQTEG.jpg"
-                            alt="Phim hay 2021- Xem phim hay nhất" />
+                            alt="Phim hay- Xem phim hay nhất" />
                     </div>
                     Liên hệ QC: <a href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                        data-cfemail="e5958d8c888d849ccb868aa58288848c89cb868a88">[email&#160;protected]</a>
+                        data-cfemail="e5958d8c888d849ccb868aa58288848c89cb868a88">[quantronghiep2001@gmail.com]</a>
                 </div>
             </div>
         </div>
@@ -569,6 +637,57 @@
                 $('.count_bookmark').text(old_data.length);
             }
         });
+    </script>
+    {{-- delete cart  --}}
+    <script>
+         $(document).on('click','.cart_delete', function(event){
+            event.preventDefault();
+            let id = $(this).data('id');
+            $.ajax({
+                url:"{{route('deleteCart')}}",
+                method:"GET",
+                data:{
+                    id:id,
+                },
+                success:function(data){
+                    if(data.code === 200){
+                        $('.cart_wrapper').html(data.cart_component);
+                        alert('Cap nhat thanh cong');
+                        $('.header__cart-notice').html(data.count_cart)
+                    }
+                    else{
+                        window.location.href = '/';
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+         });
+    </script>
+    {{-- add cart  --}}
+    <script>
+        $(document).on('click','.add_to_cart', function(event){
+            event.preventDefault();
+            let urlCart = $(this).data('url');
+            $.ajax({
+                url: urlCart,
+                type: "GET",
+                dataType: "JSON",
+                success:function(data){
+                    if(data.code === 200){
+                        alert('Them phim thanh cong');
+                        $('.header__cart-notice').html(data.count_cart)
+                    }
+                    else{
+                        alert("Phim đã có trong giỏ");
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        })
     </script>
     {{-- Wish List--}}
     <script type="text/javascript">
@@ -740,7 +859,6 @@
                 {
                  alert("Lỗi đánh giá");
                 }
-                
                }
               });
             
@@ -762,7 +880,7 @@
                     $.getJSON('/json_file/movies.json',function(data){
                         $.each(data,function(key,value){
                             if(value.title.search(search) != -1){
-                                $("#result").append('<a href="/phim/'+value.slug+'" style="color: #ccc"><li style="cursor:pointer; display: flex; max-height: 200px;" class="list-group-item link-class"><img src="uploads/movies/'+value.image+'" width="80" class="" /><div style="flex-direction: column; margin-left: 2px;"><h5 width="100%">'+value.title+'</h5><span style="display: -webkit-box; font-size:12px; max-height: 8.2rem; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space: normal; -webkit-line-clamp: 5; line-height: 1.6rem;" >| '+value.description+'</span></div></li></a><hr style="margin-bottom: 2px;">');
+                                $("#result").append('<a href="/phim/'+value.slug+'" style="color: #ccc"><li style="cursor:pointer; display: flex; max-height: 200px;" class="list-group-item link-class"><img src="/uploads/movies/'+value.image+'" width="80" class="" /><div style="flex-direction: column; margin-left: 2px;"><h5 width="100%">'+value.title+'</h5><span style="display: -webkit-box; font-size:12px; max-height: 8.2rem; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space: normal; -webkit-line-clamp: 5; line-height: 1.6rem;" >| '+value.description+'</span></div></li></a><hr style="margin-bottom: 2px;">');
                             }
                         })
                     })
@@ -774,7 +892,7 @@
             $("#result").on('click','li',function(){
                 var click_text = $(this).text().split('|');
                 $('#timkiem').val($.trim(click_text[0]));
-                $('#result').htm('');
+                $('#result').html('');
                 $('#result').css('display','none');
             });
         });
@@ -826,6 +944,8 @@
       });
     });
   </script>
+
+  @yield('scriptss')
 
 </body>
 

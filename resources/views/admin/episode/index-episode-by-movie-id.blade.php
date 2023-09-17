@@ -5,6 +5,7 @@
 
 @section('content')
 <div class="container-fluid">
+    <span></span>
     <div class="row col-md-2">
         <a href="{{route('episode.createEpisodeByMovieId',$list_episode_add[0]->movie->id)}}" class="btn btn-success">
             <i class="fa fa-plus"></i> Thêm mới
@@ -37,6 +38,7 @@
                             <th>Ảnh phim</th>
                             <th>Tập</th>
                             <th>Link phim</th>
+                            <th>Status</th>
                             <th>Created_at</th>
                             <th>Updated_at</th>
                             <th></th>
@@ -56,6 +58,9 @@
                                 <iframe width="100%" height="350" src="https://www.youtube.com/embed/{{$episode->linkphim}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                             </td> --}}
                             <td>{{$episode->linkphim}}</td>
+                            <td>
+                                {{ $episode->status == 1 ? "Đã xem" : "Chưa xem"}}
+                            </td>
                             <td>{{ date('d-m-Y H:i:s', strtotime($episode->created_at))}}</td>
                             <td>{{ !empty($episode->updated_at) ? date('d-m-Y H:i:s', strtotime($episode->updated_at)) : '--' }}</td>
                             <td>

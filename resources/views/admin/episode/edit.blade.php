@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header bg-primary">Edit Danh mục</div>
+                <div class="card-header bg-primary">Edit tập phim</div>
 
                 <div class="card-body">
                     @if (session('status'))

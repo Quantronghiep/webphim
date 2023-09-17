@@ -8,60 +8,7 @@
           <div class="ajax"></div>
        </div>
     </div>
-    <style>
-      .button_wishlist {
-         border: none;
-         position: absolute;
-         top : 50%;
-         left: 50%;
-         background: white;
-         color: #6e6d7a;
-         padding: 8px;
-         border-radius: 10px;
-         z-index: 1000000;
-         font-size: 16px;
-         display: none;
-      }
-      .button_wishlist:hover{
-         background: #ccc;
-      }
-      .halim-item:hover{
-         .button_wishlist{
-            display: block;
-         }
-      }
-    </style>
-    {{-- <div class="col-xs-12 carausel-sliderWidget">
-       <section id="halim-advanced-widget-4">
-          <div class="section-heading">
-             <a href="danhmuc.php" title="Phim Chiếu Rạp">
-             <span class="h-text">Phim Chiếu Rạp</span>
-             </a>
-             <ul class="heading-nav pull-right hidden-xs">
-                <li class="section-btn halim_ajax_get_post" data-catid="4" data-showpost="12" data-widgetid="halim-advanced-widget-4" data-layout="6col"><span data-text="Chiếu Rạp"></span></li>
-             </ul>
-          </div>
-          <div id="halim-advanced-widget-4-ajax-box" class="halim_box">
-             <article class="col-md-2 col-sm-4 col-xs-6 thumb grid-item post-38424">
-                <div class="halim-item">
-                   <a class="halim-thumb" href="" title="GÓA PHỤ ĐEN">
-                      <figure><img class="lazy img-responsive" src="https://lumiere-a.akamaihd.net/v1/images/p_blackwidow_disneyplus_21043-1_63f71aa0.jpeg" alt="GÓA PHỤ ĐEN" title="GÓA PHỤ ĐEN"></figure>
-                      <span class="status">HD</span><span class="episode"><i class="fa fa-play" aria-hidden="true"></i>Vietsub</span> 
-                      <div class="icon_overlay"></div>
-                      <div class="halim-post-title-box">
-                         <div class="halim-post-title ">
-                            <p class="entry-title">GÓA PHỤ ĐEN</p>
-                            <p class="original_title">Black Widow</p>
-                         </div>
-                      </div>
-                   </a>
-                </div>
-             </article>
-            
-          </div>
-       </section>
-       <div class="clearfix"></div>
-    </div> --}}
+
     <div id="halim_related_movies-2xx" class="wrap-slider">
       <div class="section-bar clearfix">
          <h3 class="section-title"><span>PHIM HOT</span></h3>
@@ -70,7 +17,10 @@
          @foreach($phimhot as $hot )
          <article class="thumb grid-item post-38498">
             <div class="halim-item">
-               <p class="button_wishlist"><i class="fa fa-heart"></i></p>
+               <input type="hidden" value="{{$hot->title}}" id="wishlist_movietitle{{$hot->id}}">
+               <input type="hidden" value="{{$hot->slug}}" id="wishlist_movieslug{{$hot->id}}">
+               <input type="hidden" value="{{$hot->image}}" id="wishlist_movieurlImage{{$hot->id}}">
+                  <button class="button_wishlist" id="{{$hot->id}}" onclick="add_wishlist(this.id);"><i class="fa fa-heart"></i></button>
                <a class="halim-thumb" href="{{route('movie',$hot->slug)}}" title="{{$hot->title}}">
                   <figure><img class="lazy img-responsive" src="{{asset('uploads/movies/' . $hot->image)}}" alt="{{$hot->title}}" title="{{$hot->title}}"></figure>
                   <span class="status"> @if($hot->resolution == 0)
@@ -112,7 +62,7 @@
       <script>
          $(document).ready(function($) {				
          var owl = $('#halim_related_movies-2');
-         owl.owlCarousel({loop: true,margin: 4,autoplay: true,autoplayTimeout: 4000,autoplayHoverPause: true,nav: true,navText: ['<i class="hl-down-open rotate-left"></i>', '<i class="hl-down-open rotate-right"></i>'],responsiveClass: true,responsive: {0: {items:2},480: {items:3}, 600: {items:4},1000: {items: 5}}})});
+         owl.owlCarousel({loop: true,margin: 4,autoplay: true,autoplayTimeout: 4000,autoplayHoverPause: true,nav: true,navText: ['<i class="fa fa-left"><</i>', '<i class="fa fa-right">></i>'],responsiveClass: true,responsive: {0: {items:2},480: {items:3}, 600: {items:4},1000: {items: 5}}})});
       </script>
    </div>
     <main id="main-contents" class="col-xs-12 col-sm-12 col-md-8">

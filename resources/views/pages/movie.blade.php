@@ -41,24 +41,49 @@
                 <div class="movie_info col-xs-12">
                    <div class="movie-poster col-md-3">
                       <img class="movie-thumb" src="{{asset('uploads/movies/' . $movie->image)}}" alt="{{$movie->title}}">
-                      @if($movie->resolution != 3)
-                        @if($movie->sotap == 1)
-                           <div class="bwa-content">
-                              <div class="loader"></div>
-                              <a href="{{route('watch',[$movie->slug,'episode'=>1])}}" class="bwac-btn">
-                              <i class="fa fa-play"></i>
-                              </a>
-                           </div>
+                     @php
+                        if(isset($is_payment) && $is_payment == 1){
+                           $isPayment = 1;
+                        }
+                        else {
+                           $isPayment = 0;
+                        }
+                        if(isset($check_register_month) && $check_register_month == 1){
+                           $registedMonth = 1;
+                        }
+                        else {
+                           $registedMonth = 0;
+                        }
+                     @endphp
+                      @if($movie->price ==0 || $isPayment == 1 || $registedMonth == 1)
+                        @if($movie->resolution != 3)
+                           {{-- @if($movie->sotap == 1)
+                              <div class="bwa-content">
+                                 <div class="loader"></div>
+                                 <a href="{{route('watch',[$movie->slug,'episode'=>1])}}" class="bwac-btn">
+                                 <i class="fa fa-play"></i>
+                                 </a>
+                              </div>
+                           @else --}}
+                              <div class="bwa-content">
+                                 <div class="loader"></div>
+                                 <a href="{{route('watch',['slug'=>$movie->slug,'episode'=>$episode_first])}}" class="bwac-btn">
+                                 <i class="fa fa-play"></i>
+                                 </a>
+                              </div>
+                           {{-- @endif --}}
+                           @if($isPayment == 1 || ($registedMonth == 1 && $movie->price !=0 ))
+                              <a href="#" style="display: block ; margin : 5px 0;" 
+                              class="btn btn-success"
+                              >Đã trả phí ({{number_format($movie->price)}} VNĐ)</a>
+                           @endif
                         @else
-                           <div class="bwa-content">
-                              <div class="loader"></div>
-                              <a href="{{route('watch',[$movie->slug,'episode'=>$episode_first])}}" class="bwac-btn">
-                              <i class="fa fa-play"></i>
-                              </a>
-                           </div>
+                           <a href="#watch_trailer" style="display: block" class="btn btn-primary watch_trailer">Trailer</a>
                         @endif
                       @else
-                        <a href="#watch_trailer" style="display: block" class="btn btn-primary watch_trailer">Trailer</a>
+                        <a href="#" style="display: block ; margin : 5px 0;" 
+                        class="btn btn-primary add_to_cart"
+                        data-url="{{route('addToCart',['id'=>$movie->id])}}">Add to cart ({{number_format($movie->price)}} VNĐ)</a>
                       @endif
                    </div>
                    <div class="film-poster col-md-9">
@@ -80,28 +105,48 @@
                            </li>
                         @endif
    
-                        @if($movie->season !=0)
+                        {{-- @if($movie->season !=0)
                            <li class="list-info-group-item"><span>Season</span> : {{$movie->season}}</li>
-                        @endif
+                        @endif --}}
                          <li class="list-info-group-item"><span>Thể loại</span> : 
                            @foreach($movie->movie_genre as $genre)
                               <a href="{{ route('genre', $genre->slug) }}" class="badge badge-dark" rel="category tag">{{$genre->title}}
                             @endforeach
                            </a>
                         </li>
-                        @if($movie->thuocphim == 1)
+                        @if($movie->thuocphim == 1  && ($movie->price ==0 || $isPayment == 1 || $check_register_month == 1))
                            <li class="list-info-group-item"><span>Tập phim</span> : 
                               @foreach($movie->episode as $key => $sotap)
+                              <input type="hidden" value="{{$movie->slug}}" id="watched_movieslug{{$sotap->episode}}">
+                              <input type="hidden" value="{{$sotap->episode}}" id="watched_movieEpisode{{$sotap->episode}}">
                               <a href="{{route('watch',[$movie->slug,'episode'=>$sotap->episode])}}">
-                                 <span class="halim-btn btn-primary btn halim-btn-2 {{$key == 0 ? 'active':''}} halim-info-1-1 box-shadow" data-post-id="37976" data-server="1" data-episode="1" data-position="first" data-embed="0" data-title="Xem phim {{$movie->title}} - Tập {{$sotap->episode}} - {{$movie->name_eng}} - Vietsub + Thuyết Minh" data-h1="{{$movie->title}} - tập {{$sotap->episode}}">Tập {{$sotap->episode}}</span>
+                                 <span class="halim-btn btn-primary btn halim-btn-2 {{$key == 0 ? 'active':''}} halim-info-1-1 box-shadow" data-post-id="37976" data-server="1" data-episode="1" data-position="first" data-embed="0" data-title="Xem phim {{$movie->title}} - Tập {{$sotap->episode}} - {{$movie->name_eng}} - Vietsub + Thuyết Minh" data-h1="{{$movie->title}} - tập {{$sotap->episode}}">Tập {{$sotap->episode}}  <span id="watched{{$sotap->episode}}"></span></span>
                               </a>
                               @endforeach
                            </li>
+                        @elseif($movie->thuocphim == 1  && !($movie->price ==0 || $isPayment == 1 || $check_register_month == 1))
+                        <li class="list-info-group-item"><span>Tập phim</span> : 
+                           @foreach($movie->episode as $key => $sotap)
+                           <a href="#">
+                              <span class="halim-btn btn-primary btn halim-btn-2 {{$key == 0 ? 'active':''}} halim-info-1-1 box-shadow" data-post-id="37976" data-server="1" data-episode="1" data-position="first" data-embed="0" data-title="Xem phim {{$movie->title}} - Tập {{$sotap->episode}} - {{$movie->name_eng}} - Vietsub + Thuyết Minh" data-h1="{{$movie->title}} - tập {{$sotap->episode}}">Tập {{$sotap->episode}}</span>
+                           </a>
+                           @endforeach
+                        </li>
                         @endif
                          <li class="list-info-group-item"><span>Danh mục phim</span> : <a href="{{ route('category', $movie->category->slug) }}" rel="category tag">{{$movie->category->title}}</a></li>
                          <li class="list-info-group-item"><span>Quốc gia</span> : <a href="{{ route('country', $movie->country->slug) }}" rel="tag">{{$movie->country->title}}</a></li>
                          <li class="list-info-group-item"><span>Năm phim</span> : {{$movie->year}}</li>
-                        
+                         @if($movie->thuocphim != 1)
+                           <li class="list-info-group-item"> 
+                              @foreach($movie->episode as $key => $sotap)
+                              <input type="hidden" value="{{$movie->slug}}" id="watched_movieslug{{$sotap->episode}}">
+                              <input type="hidden" value="{{$sotap->episode}}" id="watched_movieEpisode{{$sotap->episode}}">
+                              <a href="{{route('watch',[$movie->slug,'episode'=>$sotap->episode])}}">
+                                 <span class="halim-btn btn-primary btn halim-btn-2 {{$key == 0 ? 'active':''}} halim-info-1-1 box-shadow" data-post-id="37976" data-server="1" data-episode="1" data-position="first" data-embed="0" data-title="Xem phim {{$movie->title}} - Tập {{$sotap->episode}} - {{$movie->name_eng}} - Vietsub + Thuyết Minh" data-h1="{{$movie->title}} - tập {{$sotap->episode}}"><span id="watched{{$sotap->episode}}"></span></span>
+                              </a>
+                              @endforeach
+                           </li>
+                        @endif
                          {{-- <li class="list-info-group-item"><span>Đạo diễn</span> : <a class="director" rel="nofollow" href="https://phimhay.co/dao-dien/cate-shortland" title="Cate Shortland">Cate Shortland</a></li> --}}
                          {{-- <li class="list-info-group-item last-item" style="-overflow: hidden;-display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-flex: 1;-webkit-box-orient: vertical;"><span>Diễn viên</span> : <a href="" rel="nofollow" title="C.C. Smiff">C.C. Smiff</a>, <a href="" rel="nofollow" title="David Harbour">David Harbour</a>, <a href="" rel="nofollow" title="Erin Jameson">Erin Jameson</a>, <a href="" rel="nofollow" title="Ever Anderson">Ever Anderson</a>, <a href="" rel="nofollow" title="Florence Pugh">Florence Pugh</a>, <a href="" rel="nofollow" title="Lewis Young">Lewis Young</a>, <a href="" rel="nofollow" title="Liani Samuel">Liani Samuel</a>, <a href="" rel="nofollow" title="Michelle Lee">Michelle Lee</a>, <a href="" rel="nofollow" title="Nanna Blondell">Nanna Blondell</a>, <a href="" rel="nofollow" title="O-T Fagbenle">O-T Fagbenle</a></li> --}}
                            <ul class="list-inline rating"  title="Average Rating">
@@ -253,7 +298,7 @@
              <script>
                 jQuery(document).ready(function($) {				
                 var owl = $('#halim_related_movies-2');
-                owl.owlCarousel({loop: true,margin: 4,autoplay: true,autoplayTimeout: 4000,autoplayHoverPause: true,nav: true,navText: ['<i class="hl-down-open rotate-left"></i>', '<i class="hl-down-open rotate-right"></i>'],responsiveClass: true,responsive: {0: {items:2},480: {items:3}, 600: {items:4},1000: {items: 4}}})});
+                owl.owlCarousel({loop: true,margin: 4,autoplay: true,autoplayTimeout: 4000,autoplayHoverPause: true,nav: true,navText: ['<i class="hl-down-open rotate-left"></i>', '<i class="hl-down-open rotate-left"></i>'],responsiveClass: true,responsive: {0: {items:2},480: {items:3}, 600: {items:4},1000: {items: 4}}})});
              </script>
           </div>
        </section>
@@ -261,4 +306,48 @@
     @include('pages.include.sidebar')
 
  </div>
-@endsection
+ @stop
+ @section('scriptss')
+     <script>
+         // Lấy danh sách phim đã xem từ Local Storage
+         function getWatchedMoviesFromLocalStorage() {
+            const watchedMovies = localStorage.getItem('watched');
+            return watchedMovies ? JSON.parse(watchedMovies) : [];
+         }
+
+         // Kiểm tra xem một phim với tên slug và số tập đã xem hay chưa
+         function isMovieEpisodeWatched(slug, episode) {
+            const watchedMovies = getWatchedMoviesFromLocalStorage();
+            const matches = watchedMovies.filter(item => item.movieName == slug && item.episodeNumber == episode);
+            return matches.length > 0;
+         }
+
+         // Kiểm tra và cập nhật trạng thái đã xem cho các tập phim
+         function updateWatchedStatus() {
+            const inputs = document.querySelectorAll('[id^="watched_movieEpisode"]');
+            inputs.forEach((input) => {
+               const episode = input.value;
+               const slugInput = document.getElementById(`watched_movieslug${episode}`);
+               if (slugInput) {
+                  const slug = slugInput.value;
+                  const spanElement = document.querySelector(`span#watched${episode}`);
+
+               if (isMovieEpisodeWatched(slug, episode)) {
+                  if (spanElement) {
+                     spanElement.textContent = 'Đã xem';
+                  }
+                  else{
+                     spanElement.textContent = 'Chưa xem';
+                  }
+               }
+               }
+            });
+         }
+
+
+         // Gọi hàm để kiểm tra và cập nhật trạng thái đã xem cho các tập phim khi trang được tải
+         updateWatchedStatus();
+
+
+     </script>
+ @stop

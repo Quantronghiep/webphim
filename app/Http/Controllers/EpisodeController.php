@@ -75,10 +75,11 @@ class EpisodeController extends Controller
 
     public function update(Request $request, $id)
     {
+        $movie_id = Episode::with('movie')->where('id',$id)->value('movie_id');
         $episode = new Episode();
         $params = $request->all();
         $episode->updateEpisode($params,$id);
-        return redirect('admin/episode')->with('success','Update success!');
+        return redirect('admin/index-episode/'.$movie_id)->with('success','Update success!');
     }
 
     public function destroy($id)

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Country;
+use App\Http\Requests\CreateCategoryRequest;
 
 class CountryController extends Controller
 {
@@ -21,7 +22,7 @@ class CountryController extends Controller
     }
 
     
-    public function store(Request $request)
+    public function store(CreateCategoryRequest $request)
     {
         $params = $request->all();
         $country = new Country();
@@ -45,7 +46,7 @@ class CountryController extends Controller
     }
 
     
-    public function update(Request $request, $id)
+    public function update(CreateCategoryRequest $request, $id)
     {
         $params = $request->all();
         $country = new Country();

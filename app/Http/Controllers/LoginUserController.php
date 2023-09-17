@@ -18,6 +18,7 @@ class LoginUserController extends Controller
         return view('pages.register');
     }
     public function registerUser(UserRegisterRequest $request){
+        $request->validated();
         $data = $request->all();
         $user = new User();
         $user->name = $data['name'];
@@ -25,9 +26,9 @@ class LoginUserController extends Controller
         $user->password = Hash::make($data['password']);
         $user->save();
          // luu lai nguoi dang nhap
-         Auth::attempt(['email' => $request->email,
-         'password' => $request->password,
-        ]);
+        //  Auth::attempt(['email' => $request->email,
+        //  'password' => $request->password,
+        // ]);
          $success = 'Đăng kí thành công';
 
          return redirect('/login')->with('success', $success);
@@ -38,10 +39,15 @@ class LoginUserController extends Controller
             'email' => 'required|email',
             'password' => 'required|min:6'
         ]);
-        if (Auth::attempt(['email' => $request->email,
+        if (Auth::guard('web')->attempt(['email' => $request->email,
             'password' => $request->password,
         ])) {
             return redirect()->route('homepage');
+        }
+        elseif (Auth::guard('admin')->attempt(['email' => $request->email,
+            'password' => $request->password,
+        ])) {
+            return redirect()->route('admin.home');
         }
         else {
             return back()->with('error', 'Đăng nhập thất bại');
@@ -51,6 +57,8 @@ class LoginUserController extends Controller
     public function logout(){
         Session::flush();
         Auth::logout();
+        // Xóa dữ liệu trong Local Storage
+        echo '<script>localStorage.removeItem("watched");</script>';
         return redirect()->route('homepage');
     }
 }

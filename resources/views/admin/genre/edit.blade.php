@@ -14,10 +14,24 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    @if ($errors->any())
+                    <ul style="padding:0px">
+                        @foreach ($errors->all() as $error)
+                            <li class="alert alert-danger">{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    @endif
+                    @if (Session::has('error'))
+                    <li class="alert alert-danger">{{ Session::get('error') }}</li>
+                    @endif
+                    @if(session('error'))
+                    <li class="alert alert-danger">{{session('error')}}</li>
+                    @endif
                     @if(isset($genre))
                     {!! Form::open(['route'=>['genre.update',$genre->id],'method'=>'PUT']) !!}
                     <div class="form-group">
                         {!! Form::label('title', 'Title', []) !!}
+                        <span class="text-danger"> *</span>
                         {!! Form::text('title', $genre->title, ['class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...','id'=>'slug','onkeyup'=>'ChangeToSlug()']) !!}
                     </div>
                     <div class="form-group">
@@ -40,4 +54,5 @@
         </div>
     </div>
 </div>
+
 @endsection

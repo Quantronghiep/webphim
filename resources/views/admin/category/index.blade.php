@@ -60,10 +60,16 @@
                             <td>{{ date('d-m-Y H:i:s', strtotime($category->created_at))}}</td>
                             <td>{{ !empty($category->updated_at) ? date('d-m-Y H:i:s', strtotime($category->updated_at)) : '--' }}</td>
                             <td>
-                                <a class="btn btn-info" href="{{route('category.edit',$category->id)}}">Edit</a>
+                                <a class="btn btn-info btn-sm px-3" href="{{route('category.edit',$category->id)}}"><i class='fa fa-pen-to-square'></i></a>
+                                <form action="{{route('category.destroy',$category->id)}}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm px-3 mt-2 delete-btn" data-id="{{ $category->id }}"><i class='fa fa-trash'></i></button>
+                                </form>
+                                {{-- <a class="btn btn-info" href="{{route('category.edit',$category->id)}}">Edit</a>
                                 {!! Form::open(['method'=>'DELETE','route'=>['category.destroy',$category->id],'onsubmit'=>'return confirm("Bạn có chắc chắn muốn xóa bản ghi này")']) !!}
                                 {!! Form::submit('Delete', ['class'=>'btn btn-danger']) !!}
-                                {!! Form::close() !!}
+                                {!! Form::close() !!} --}}
                             </td>
                           </tr>
                           @endforeach
@@ -78,4 +84,49 @@
         </div>
     </div>
 </div>
-@endsection
+@stop
+@section('scripts')
+    <script>
+             document.addEventListener('DOMContentLoaded', function() {
+            var deleteButtons = document.querySelectorAll('.delete-btn');
+
+            deleteButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+
+                    var id = this.getAttribute('data-id');
+
+                    Swal.fire({
+                        title: 'Bạn có chắc chắn muốn xóa?',
+                        text: 'Hành động này sẽ không thể hoàn tác!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#dc3545',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Xóa',
+                        cancelButtonText: 'Hủy bỏ'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Gửi yêu cầu xóa thông qua AJAX hoặc form submit
+                            // Ví dụ: gửi yêu cầu xóa thông qua AJAX sử dụng Axios
+                            // axios.delete(`/admin/country/${id}`)
+                            //     .then(response => {
+                            //         // Xử lý phản hồi thành công
+                            //         Swal.fire('Đã xóa!', 'Mục đã được xóa thành công.', 'success');
+                            //         // Cập nhật giao diện hoặc chuyển hướng nếu cần thiết
+                            //     })
+                            //     .catch(error => {
+                            //         // Xử lý phản hồi lỗi
+                            //         Swal.fire('Lỗi!', 'Đã xảy ra lỗi khi xóa mục.', 'error');
+                            //     });
+                            
+                            // Hoặc có thể sử dụng form submit
+                            this.closest('form').submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+@stop
+

@@ -139,20 +139,20 @@
         </li>
     </ul>
 
-    @if (auth()->check() && auth()->user()->type == Admin::TYPE_SYSTEM_ADMIN)
+    {{-- @if (auth()->check() && auth()->user()->type == Admin::TYPE_SYSTEM_ADMIN) --}}
    
-
+{{-- 
     </div>
         <div class="form-group" style="width: 600px ; margin:auto">
             <label for="app_id">App quản lý</label>
-            <div id="result"></div>
+            <div id="result"></div> --}}
             {{-- <select name="app_id" class="form-control" id="app_id">
                 <option value="${res.apps[i].id}">
                     ${res.apps[i].app_name}
                     </option>
             </select> --}}
-        </div>
-    @endif
+        {{-- </div>
+    @endif --}}
 </nav>
 <!-- /.navbar -->
 
